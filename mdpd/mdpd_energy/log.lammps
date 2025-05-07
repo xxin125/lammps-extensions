@@ -1,0 +1,91 @@
+LAMMPS (2 Apr 2025)
+# Xinxin DENG
+# TU Darmstadt
+# Müller-Plathe Group
+
+###############################################################
+
+units 		    lj
+dimension       3
+boundary        p    p    p
+atom_style	    atomic
+
+###############################################################
+
+read_data       lammps.data
+Reading data file ...
+  orthogonal box = (0 0 0) to (5 5 5)
+  3 by 2 by 2 MPI processor grid
+  reading atoms ...
+  500 atoms
+  read_data CPU = 0.002 seconds
+
+mass            1 1
+
+###############################################################
+
+pair_style      mdpd 1.0 1.0 0.75 65689
+pair_coeff      1 1 -50.0 25.0 4.5
+
+###############################################################
+
+neighbor        0.2 bin
+neigh_modify    every 1 delay 0 check yes
+timestep        0.01
+comm_modify     vel yes
+thermo          1
+
+###############################################################
+
+compute         pe_atom all pe/atom
+dump            pe_atom all custom 1 pe_atom.trj id c_pe_atom
+dump_modify     pe_atom sort id format float %.15g
+
+###############################################################
+
+thermo_style    custom step temp pe
+thermo_modify   norm no format float %.15g
+run             0
+WARNING: No fixes with time integration, atoms won't move
+For more information see https://docs.lammps.org/err0028 (../verlet.cpp:60)
+Neighbor list info ...
+  update: every = 1 steps, delay = 0 steps, check = yes
+  max neighbors/atom: 2000, page size: 100000
+  master list distance cutoff = 1.2
+  ghost atom cutoff = 1.2
+  binsize = 0.6, bins = 9 9 9
+  1 neighbor lists, perpetual/occasional/extra = 1 0 0
+  (1) pair mdpd, perpetual
+      attributes: half, newton on
+      pair build: half/bin/atomonly/newton
+      stencil: half/bin/3d
+      bin: standard
+Per MPI rank memory allocation (min/avg/max) = 3.203 | 3.204 | 3.204 Mbytes
+   Step          Temp          PotEng    
+         0  0 -1509.84863906198
+Loop time of 5.87167e-06 on 12 procs for 0 steps with 500 atoms
+
+9.9% CPU use with 12 MPI tasks x no OpenMP threads
+
+MPI task timing breakdown:
+Section |  min time  |  avg time  |  max time  |%varavg| %total
+---------------------------------------------------------------
+Pair    | 0          | 0          | 0          |   0.0 |  0.00
+Neigh   | 0          | 0          | 0          |   0.0 |  0.00
+Comm    | 0          | 0          | 0          |   0.0 |  0.00
+Output  | 0          | 0          | 0          |   0.0 |  0.00
+Modify  | 0          | 0          | 0          |   0.0 |  0.00
+Other   |            | 5.872e-06  |            |       |100.00
+
+Nlocal:        41.6667 ave          64 max          28 min
+Histogram: 1 2 4 1 0 1 2 0 0 1
+Nghost:         351.25 ave         364 max         329 min
+Histogram: 1 0 1 1 1 0 1 3 1 3
+Neighs:        611.167 ave        1088 max         401 min
+Histogram: 4 1 3 1 0 1 0 1 0 1
+
+Total # of neighbors = 7334
+Ave neighs/atom = 14.668
+Neighbor list builds = 0
+Dangerous builds = 0
+Total wall time: 0:00:00
